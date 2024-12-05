@@ -75,3 +75,27 @@ Follow these steps to install and set up your project locally:
 3. Browse the available events on the main page (`/events`).
 4. Select an event and register for it by entering your details and purchasing tickets.
 5. Admins can manage events from the admin dashboard.
+
+## Local DB
+
+For local testing, you can use SQLite DB. Replace in prisma/schema.prisma:
+
+```datasource db {
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
+}
+```
+
+for:
+
+```datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+```
+
+And generate/make migrations:
+
+`npx prisma generate `
+
+`npx prisma migrate dev --name init`
