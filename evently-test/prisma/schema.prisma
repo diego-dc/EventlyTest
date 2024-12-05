@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
+
 }
 
 model User {
@@ -16,5 +17,30 @@ model User {
   password String
   email String @unique
   role String @default("user")
+  transactions Transaction[]
 }
 
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String   @unique
+  description String
+  date        DateTime
+  price       Int
+  maxcapacity Int
+  transactions Transaction[]
+}
+
+model Transaction {
+  id         Int      @id @default(autoincrement())
+  eventId    Int
+  userId     Int
+  tickets    Int
+  firstName  String
+  lastName   String
+  email      String
+  amount     Float
+
+  // Relaciones
+  event      Event    @relation(fields: [eventId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+}
