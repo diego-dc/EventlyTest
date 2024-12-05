@@ -66,7 +66,7 @@ export function LoginForm() {
     console.log('response:', response);
 
     if (!response?.error) {
-      router.push('/dashboard');
+      router.push('/events');
     }
     toast.success('You are now signed in');
   }

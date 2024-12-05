@@ -10,5 +10,5 @@ export default async function Page() {
   }
 
   // Si el usuario ya está autenticado, redirige a la página protegida
-  redirect('/dashboard');
+  redirect('/events');
 }

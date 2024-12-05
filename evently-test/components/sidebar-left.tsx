@@ -16,11 +16,7 @@ import {
   Trash2,
 } from 'lucide-react';
 
-import { NavFavorites } from '@/components/nav-favorites';
 import { NavMain } from '@/components/nav-main';
-import { NavSecondary } from '@/components/nav-secondary';
-import { NavWorkspaces } from '@/components/nav-workspaces';
-import { TeamSwitcher } from '@/components/team-switcher';
 import {
   SidebarFooter,
   SidebarMenu,
@@ -30,9 +26,7 @@ import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  SidebarRail,
 } from '@/components/ui/sidebar';
-import { Session } from 'inspector/promises';
 import { useSession } from 'next-auth/react';
 import { NavUser } from './nav-user';
 
@@ -46,8 +40,25 @@ export function SidebarLeft({
     navMain: [
       {
         title: 'Events',
-        url: '#',
+        url: '/events',
         icon: Search,
+      },
+      {
+        title: 'My Events',
+        url: '#',
+        icon: Calendar,
+      },
+    ],
+    navAdmin: [
+      {
+        title: 'Create Event',
+        url: '/admin/events',
+        icon: Search,
+      },
+      {
+        title: 'History of Transactions',
+        url: 'admin/tickets',
+        icon: Calendar,
       },
     ],
     user: session
@@ -70,7 +81,7 @@ export function SidebarLeft({
                       <GalleryVerticalEnd className="size-4" />
                     </div>
                     <div className="flex flex-col gap-0.5 leading-none">
-                      <span className="font-semibold">Documentation</span>
+                      <span className="font-semibold">EventlyTest</span>
                       <span className="">v1.0.0</span>
                     </div>
                   </a>
@@ -79,6 +90,7 @@ export function SidebarLeft({
             </SidebarMenu>
             <NavMain items={data2.navMain} />
             <SidebarSeparator className="mx-0" />
+            <NavMain items={data2.navAdmin} />
             {/* ACA LOS LINKS PARA ADMIN */}
           </SidebarHeader>
           <SidebarContent></SidebarContent>
