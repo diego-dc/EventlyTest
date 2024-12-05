@@ -1,17 +1,16 @@
 import Transaction from '@/components/transaction';
 import { PrismaClient } from '@prisma/client';
 
-// Define the type for the component props, specifying the expected parameters
-type EventDetailsProps = {
-  params: { id: string };
-};
-
 // Initialize the PrismaClient instance for database operations
 const prisma = new PrismaClient();
 
 // Define the Next.js page component
-export default async function Page({ params }: EventDetailsProps) {
-  var { id } = await params; // Extract the "id" parameter from the props
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const id = (await params).id; // Extract the "id" parameter from the props
 
   // Fetch the event details from the database based on the provided ID
   const event = await prisma.event.findUnique({
