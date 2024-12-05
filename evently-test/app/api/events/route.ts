@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { error } from 'console';
+import { stat } from 'fs';
 
 const prisma = new PrismaClient();
 
@@ -38,10 +40,13 @@ export async function POST(req: Request) {
 
     if (existingEvent) {
       console.error('Event already exists');
-      return NextResponse.json({
-        success: false,
-        message: 'Event already exists',
-      });
+      return NextResponse.json(
+        {
+          error: 'Event already exists',
+          message: 'Event already exists',
+        },
+        { status: 400 },
+      );
     }
 
     console.log('Creating event');
@@ -58,10 +63,13 @@ export async function POST(req: Request) {
 
     if (!newEvent) {
       console.error('Error creating event');
-      return NextResponse.json({
-        success: false,
-        message: 'An error occurred while creating the event',
-      });
+      return NextResponse.json(
+        {
+          error: 'Error creating event',
+          message: 'An error occurred while creating the event',
+        },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json(newEvent);

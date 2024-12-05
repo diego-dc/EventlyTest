@@ -29,6 +29,7 @@ import {
 import { toast } from 'sonner';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 // Define the schema for the form
 export const loginFormSchema = z.object({
@@ -46,6 +47,9 @@ export const loginFormSchema = z.object({
 });
 
 export function LoginForm() {
+  const router = useRouter();
+  const { toast } = useToast();
+
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -54,8 +58,6 @@ export function LoginForm() {
     },
   });
 
-  const router = useRouter();
-
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
     const response = await signIn('credentials', {
       email: values.email,
@@ -63,12 +65,28 @@ export function LoginForm() {
       redirect: false,
     });
 
-    console.log('response:', response);
-
-    if (!response?.error) {
-      router.push('/events');
+    if (response?.error) {
+      // Si hay un error en la respuesta de NextAuth
+      toast({
+        className: 'bg-red-500 text-white',
+        title: 'Error',
+        description: 'Invalid credentials, please try again.',
+      });
+    } else if (response?.ok) {
+      // Si la respuesta fue exitosa
+      toast({
+        title: 'Success',
+        description: 'Login successful!',
+      });
+      router.push('/dashboard'); // Redirigir a la página principal o dashboard
+    } else {
+      // Manejo general de cualquier otro caso inesperado
+      toast({
+        className: 'bg-red-500 text-white',
+        title: 'Error',
+        description: 'Something went wrong, please try again later.',
+      });
     }
-    toast.success('You are now signed in');
   }
 
   return (

@@ -19,7 +19,7 @@ type EventCardProps = React.ComponentProps<typeof Card> & {
   description: string;
   date: string;
   price: number;
-  maxCapacity: number;
+  maxcapacity: number;
 };
 
 export function EventCard({ className, ...props }: EventCardProps) {
@@ -34,7 +34,7 @@ export function EventCard({ className, ...props }: EventCardProps) {
         <p className="text-slate-600 text-[14px] flex">
           <CalendarIcon className="me-1 h-5" /> {props.date}
         </p>
-        <CardTitle className="text-2xl">{props.title}</CardTitle>
+        <CardTitle className="text-2xl line-clamp-1">{props.title}</CardTitle>
         <CardDescription className="line-clamp-2">
           {props.description}
         </CardDescription>

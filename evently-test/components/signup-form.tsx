@@ -27,6 +27,8 @@ import {
 } from '@/components/ui/form';
 
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 // Define the schema for the form
 export const SignupFormSchema = z.object({
@@ -48,6 +50,9 @@ export const SignupFormSchema = z.object({
 });
 
 export function SignupForm() {
+  const router = useRouter();
+  const { toast } = useToast();
+
   const signUpForm = useForm<z.infer<typeof SignupFormSchema>>({
     resolver: zodResolver(SignupFormSchema),
     defaultValues: {
@@ -74,10 +79,22 @@ export function SignupForm() {
 
     console.log('Data:', data);
 
-    if (data.error) {
-      toast.error('Error creating user');
+    if (response.ok) {
+      // Si la respuesta es exitosa
+      toast({
+        title: 'Success',
+        description: 'Account created successfully',
+      });
+
+      router.push(`/auth/login`);
+    } else {
+      // Si hay un error
+      toast({
+        className: 'bg-red-500 text-white',
+        title: 'Error',
+        description: 'Error creating account',
+      });
     }
-    toast.success('User created successfully');
   }
 
   return (

@@ -37,6 +37,7 @@ model Transaction {
   firstName  String
   lastName   String
   email      String
+  amount     Float
 
   // Relaciones
   event      Event    @relation(fields: [eventId], references: [id])

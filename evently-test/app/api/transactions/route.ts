@@ -1,12 +1,33 @@
+import { authOptions } from '@/lib/authOptions';
 import { PrismaClient } from '@prisma/client';
+import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
+export async function GET() {
+  try {
+    const transactions = await prisma.transaction.findMany({
+      orderBy: { id: 'asc' },
+    });
+
+    return NextResponse.json(transactions);
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    return NextResponse.json(
+      { error: 'Error fetching events' },
+      { status: 500 },
+    );
+  }
+}
+
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+  const user_email = session?.user?.email || '';
+
   try {
     const body = await req.json();
-    const { name, last_name, email, tickets, event_id } = body;
+    const { name, last_name, email, amount, tickets, event_id } = body;
     console.log('Request Body:', body);
 
     // Obtener evento desde la base de datos
@@ -16,7 +37,7 @@ export async function POST(req: Request) {
 
     if (!event) {
       return NextResponse.json(
-        { success: false, message: 'Event not found.' },
+        { error: 'Error', message: 'Event not found.' },
         { status: 404 },
       );
     }
@@ -36,31 +57,43 @@ export async function POST(req: Request) {
     console.log(tickets);
 
     if (totalTickets + tickets > event.maxcapacity) {
-      return NextResponse.json({
-        success: false,
-        message: 'Not enough capacity available.',
-      });
+      return NextResponse.json(
+        {
+          erorr: 'Error',
+          message: 'Not enough capacity available.',
+        },
+        { status: 400 },
+      );
     }
 
-    const userId = 1;
+    const user = await prisma.user.findUnique({
+      where: { email: user_email },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Error', message: 'User not found.' },
+        { status: 404 },
+      );
+    }
 
     // Crear la transacción
     const transaction = await prisma.transaction.create({
       data: {
         eventId: event_id,
-        userId: userId,
+        userId: user.id,
         tickets: tickets,
         firstName: name,
         lastName: last_name,
         email: email,
+        amount: amount,
       },
     });
 
     return NextResponse.json({ success: true, transaction });
   } catch (error) {
-    console.error(error);
     return NextResponse.json(
-      { success: false, message: 'Error processing transaction.' },
+      { error: 'Error', message: 'Error processing transaction.' },
       { status: 500 },
     );
   }

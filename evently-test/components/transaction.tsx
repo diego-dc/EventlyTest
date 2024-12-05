@@ -3,6 +3,18 @@ import React, { useState } from 'react';
 
 import { BellRing, Check } from 'lucide-react';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -38,6 +50,8 @@ import {
 
 import { toast } from 'sonner';
 import { Popover, PopoverTrigger, PopoverContent } from './ui/popover';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 type TransactionProps = React.ComponentProps<typeof Card> & {
   event_id: number;
@@ -60,45 +74,71 @@ export const TransactionFormSchema = z.object({
     .trim(),
   email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
   tickets: z
-    .number()
-    .int()
-    .min(0, { message: 'tickets must be a positive number.' }),
+    .string()
+    .min(0, { message: 'tickets must be a positive number.' })
+    .transform((val) => parseInt(val, 10))
+    .refine((val) => val >= 0, {
+      message: 'Max capacity must be a positive number.',
+    }),
 });
 
 export function TransactionComponent({
   className,
   ...props
 }: TransactionProps) {
+  const router = useRouter();
+  const { toast } = useToast();
+
   const transactionForm = useForm<z.infer<typeof TransactionFormSchema>>({
     resolver: zodResolver(TransactionFormSchema),
     defaultValues: {
       name: '',
       last_name: '',
       email: '',
-      tickets: 1,
+      tickets: 0,
     },
   });
 
   async function onSubmit(values: z.infer<typeof TransactionFormSchema>) {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ...values, ...props }),
-      },
+    const confirmed = window.confirm(
+      'Are you sure you want to submit this transaction?',
     );
 
-    const data = await response.json();
+    if (confirmed) {
+      const amount = values.tickets * props.price; // TODO: get the price from the db
 
-    console.log('Data:', data);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...values, ...props, amount }),
+        },
+      );
 
-    if (data.error) {
-      toast.error('Error creating event');
+      const data = await response.json();
+
+      console.log('Data:', data);
+
+      if (response.ok) {
+        // Si la respuesta es exitosa
+        toast({
+          title: 'Success',
+          description: 'The payment was successfully',
+        });
+
+        router.push(`/events`);
+      } else {
+        // Si hay un error
+        toast({
+          className: 'bg-red-500 text-white',
+          title: 'Error',
+          description: 'Error during the payment',
+        });
+      }
     }
-    toast.success('Event created successfully');
   }
 
   return (
@@ -188,7 +228,6 @@ export function TransactionComponent({
                   </FormItem>
                 )}
               />
-
               <Button type="submit" className="w-full">
                 Buy Tickets
               </Button>

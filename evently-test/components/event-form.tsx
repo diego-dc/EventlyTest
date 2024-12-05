@@ -35,6 +35,8 @@ import {
 
 import { toast } from 'sonner';
 import { Popover, PopoverTrigger, PopoverContent } from './ui/popover';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 // Define the schema for the form
 export const EventFormSchema = z.object({
@@ -64,6 +66,9 @@ export const EventFormSchema = z.object({
 });
 
 export function EventForm() {
+  const router = useRouter();
+  const { toast } = useToast();
+
   const eventForm = useForm<z.infer<typeof EventFormSchema>>({
     resolver: zodResolver(EventFormSchema),
     defaultValues: {
@@ -91,10 +96,24 @@ export function EventForm() {
 
     console.log('Data:', data);
 
-    if (data.error) {
-      toast.error('Error creating event');
+    if (response.ok) {
+      // Si la respuesta es exitosa
+      toast({
+        title: 'Success',
+        description: 'Event created successfully',
+      });
+
+      // Redireccionar a otra página, por ejemplo, la página del evento
+
+      router.push(`/events`); // Cambia el path según tu necesidad
+    } else {
+      // Si hay un error
+      toast({
+        className: 'bg-red-500 text-white',
+        title: 'Error',
+        description: 'Error creating event',
+      });
     }
-    toast.success('Event created successfully');
   }
 
   return (
