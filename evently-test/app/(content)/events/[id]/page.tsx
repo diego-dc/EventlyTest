@@ -1,3 +1,4 @@
+import Transaction from '@/components/transaction';
 import { PrismaClient } from '@prisma/client';
 
 type EventDetailsProps = {
@@ -25,11 +26,15 @@ export default async function Page({ params }: EventDetailsProps) {
   }
 
   return (
-    <div>
-      <h1>{event.title}</h1>
-      <p>{event.description}</p>
-      <p>Date: {new Date(event.date).toLocaleDateString()}</p>
-      <p>Price: ${event.price}</p>
+    <div className="p-10">
+      <Transaction
+        event_id={event.id}
+        title={event.title}
+        date={event.date.toString()}
+        description={event.description}
+        price={event.price}
+        maxcapacity={event.maxcapacity}
+      />
     </div>
   );
 }

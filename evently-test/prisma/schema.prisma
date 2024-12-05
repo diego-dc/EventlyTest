@@ -16,6 +16,7 @@ model User {
   password String
   email String @unique
   role String @default("user")
+  transactions Transaction[]
 }
 
 model Event {
@@ -25,5 +26,19 @@ model Event {
   date        DateTime
   price       Int
   maxcapacity Int
+  transactions Transaction[]
 }
 
+model Transaction {
+  id         Int      @id @default(autoincrement())
+  eventId    Int
+  userId     Int
+  tickets    Int
+  firstName  String
+  lastName   String
+  email      String
+
+  // Relaciones
+  event      Event    @relation(fields: [eventId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+}
