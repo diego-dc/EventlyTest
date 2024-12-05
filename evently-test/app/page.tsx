@@ -5,10 +5,11 @@ import { getServerSession } from 'next-auth';
 export default async function Page() {
   const session = await getServerSession(authOptions);
 
+  // If the user is not logged in, redirect them to the `/auth/login` page.
   if (!session) {
     redirect('/auth/login');
   }
 
-  // Si el usuario ya está autenticado, redirige a la página protegida
+  // If the user is already logged in, redirect them to the `/events` page.
   redirect('/events');
 }

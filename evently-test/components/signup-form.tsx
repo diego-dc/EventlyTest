@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -15,18 +14,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 
-import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 
@@ -50,9 +46,10 @@ export const SignupFormSchema = z.object({
 });
 
 export function SignupForm() {
-  const router = useRouter();
-  const { toast } = useToast();
+  const router = useRouter(); // Router for navigation
+  const { toast } = useToast(); // Toast for notifications
 
+  // Initialize react-hook-form with Zod validation
   const signUpForm = useForm<z.infer<typeof SignupFormSchema>>({
     resolver: zodResolver(SignupFormSchema),
     defaultValues: {
@@ -63,7 +60,9 @@ export function SignupForm() {
     },
   });
 
+  // Handle form submission
   async function onSubmit(values: z.infer<typeof SignupFormSchema>) {
+    // Send the form data to the API for account creation
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/signUp`,
       {
@@ -77,18 +76,17 @@ export function SignupForm() {
 
     const data = await response.json();
 
-    console.log('Data:', data);
-
     if (response.ok) {
-      // Si la respuesta es exitosa
+      // If the response is successful, show a success toast
       toast({
         title: 'Success',
         description: 'Account created successfully',
       });
 
+      // Redirect to the login page
       router.push(`/auth/login`);
     } else {
-      // Si hay un error
+      // If there is an error, show an error toast
       toast({
         className: 'bg-red-500 text-white',
         title: 'Error',

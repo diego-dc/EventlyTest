@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
 
+// Define the props for the EventCard component
 type EventCardProps = React.ComponentProps<typeof Card> & {
   id: string;
   title: string;
@@ -23,10 +24,10 @@ type EventCardProps = React.ComponentProps<typeof Card> & {
 };
 
 export function EventCard({ className, ...props }: EventCardProps) {
-  const router = useRouter(); // Hook de navegación
+  const router = useRouter(); // Router for navigation
 
   const handleButtonClick = () => {
-    router.push(`/events/${props.id}`); // Redirige a la página del evento
+    router.push(`/events/${props.id}`); // Redirect to the event page
   };
   return (
     <Card className={cn('w-[320px]', className)} {...props}>

@@ -1,5 +1,7 @@
 import { getSession } from 'next-auth/react';
 
+// Define the requireRole function
+// Impletementation of the requireRole function not finished. TODO: Implement the requireRole logic
 export function requireRole(
   handler: (req: any, res: any) => Promise<void>,
   requiredRole: string,

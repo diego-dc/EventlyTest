@@ -1,19 +1,4 @@
 'use client';
-import React, { useState } from 'react';
-
-import { BellRing, Check } from 'lucide-react';
-
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
 
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
@@ -22,22 +7,13 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-import { format } from 'date-fns';
-
-import Link from 'next/link';
-
-import { Calendar } from '@/components/ui/calendar';
-import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Form,
   FormControl,
@@ -48,11 +24,10 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-import { toast } from 'sonner';
-import { Popover, PopoverTrigger, PopoverContent } from './ui/popover';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 
+// Define the props for the Transaction component
 type TransactionProps = React.ComponentProps<typeof Card> & {
   event_id: number;
   title: string;
@@ -89,6 +64,7 @@ export function TransactionComponent({
   const router = useRouter();
   const { toast } = useToast();
 
+  // Initialize the form using react-hook-form with Zod validation
   const transactionForm = useForm<z.infer<typeof TransactionFormSchema>>({
     resolver: zodResolver(TransactionFormSchema),
     defaultValues: {
@@ -100,13 +76,16 @@ export function TransactionComponent({
   });
 
   async function onSubmit(values: z.infer<typeof TransactionFormSchema>) {
+    // Ask for confirmation before submitting the transaction to the server. A simple version for now
     const confirmed = window.confirm(
       'Are you sure you want to submit this transaction?',
     );
 
     if (confirmed) {
+      // Calculate the amount of the transaction
       const amount = values.tickets * props.price; // TODO: get the price from the db
 
+      // Send the transaction to the server
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions`,
         {
@@ -120,10 +99,8 @@ export function TransactionComponent({
 
       const data = await response.json();
 
-      console.log('Data:', data);
-
       if (response.ok) {
-        // Si la respuesta es exitosa
+        // If the response is successful, show a success toast
         toast({
           title: 'Success',
           description: 'The payment was successfully',
@@ -131,7 +108,7 @@ export function TransactionComponent({
 
         router.push(`/events`);
       } else {
-        // Si hay un error
+        // If there is an error, show an error toast
         toast({
           className: 'bg-red-500 text-white',
           title: 'Error',

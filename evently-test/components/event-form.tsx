@@ -7,8 +7,6 @@ import { CalendarIcon } from 'lucide-react';
 
 import { format } from 'date-fns';
 
-import Link from 'next/link';
-
 import { Calendar } from '@/components/ui/calendar';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -22,7 +20,6 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { Label } from '@/components/ui/label';
 import {
   Form,
   FormControl,
@@ -33,7 +30,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-import { toast } from 'sonner';
 import { Popover, PopoverTrigger, PopoverContent } from './ui/popover';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
@@ -66,11 +62,12 @@ export const EventFormSchema = z.object({
 });
 
 export function EventForm() {
-  const router = useRouter();
-  const { toast } = useToast();
+  const router = useRouter(); // Router for navigation
+  const { toast } = useToast(); // Toast for notifications
 
+  // Initialize the form with react-hook-form and zod validation
   const eventForm = useForm<z.infer<typeof EventFormSchema>>({
-    resolver: zodResolver(EventFormSchema),
+    resolver: zodResolver(EventFormSchema), // Use zod for validation
     defaultValues: {
       title: '',
       description: '',
@@ -80,34 +77,33 @@ export function EventForm() {
     },
   });
 
+  // Handle form submission
   async function onSubmit(values: z.infer<typeof EventFormSchema>) {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/events`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/events`, // API endpoint for creating events
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(values), // Send form data in the request body
       },
     );
 
+    // Parse the response JSON
     const data = await response.json();
 
-    console.log('Data:', data);
-
+    // If the request was successful
     if (response.ok) {
-      // Si la respuesta es exitosa
       toast({
         title: 'Success',
         description: 'Event created successfully',
       });
 
-      // Redireccionar a otra página, por ejemplo, la página del evento
-
-      router.push(`/events`); // Cambia el path según tu necesidad
+      // Navigate to the events page
+      router.push(`/events`);
     } else {
-      // Si hay un error
+      // If there was an error
       toast({
         className: 'bg-red-500 text-white',
         title: 'Error',

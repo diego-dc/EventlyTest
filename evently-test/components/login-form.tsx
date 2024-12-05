@@ -15,18 +15,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 
-import { toast } from 'sonner';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
@@ -47,9 +44,10 @@ export const loginFormSchema = z.object({
 });
 
 export function LoginForm() {
-  const router = useRouter();
-  const { toast } = useToast();
+  const router = useRouter(); // Router for navigation
+  const { toast } = useToast(); // Toast for notifications
 
+  // Initialize the form using react-hook-form with Zod validation
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -58,7 +56,9 @@ export function LoginForm() {
     },
   });
 
+  // Handle form submission
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
+    // Sign in using NextAuth credentials provider
     const response = await signIn('credentials', {
       email: values.email,
       password: values.password,
@@ -66,21 +66,21 @@ export function LoginForm() {
     });
 
     if (response?.error) {
-      // Si hay un error en la respuesta de NextAuth
+      // Display error toast if authentication fails
       toast({
         className: 'bg-red-500 text-white',
         title: 'Error',
         description: 'Invalid credentials, please try again.',
       });
     } else if (response?.ok) {
-      // Si la respuesta fue exitosa
+      // Display success toast and redirect if login is successfu
       toast({
         title: 'Success',
         description: 'Login successful!',
       });
-      router.push('/dashboard'); // Redirigir a la página principal o dashboard
+      router.push('/events'); // Redirect to events page after successful login
     } else {
-      // Manejo general de cualquier otro caso inesperado
+      // Handle unexpected errors
       toast({
         className: 'bg-red-500 text-white',
         title: 'Error',

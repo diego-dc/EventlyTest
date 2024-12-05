@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 
+// Define the layout component that wraps the main content for authorized users
 export default async function ContentLayout({
   children,
 }: {
@@ -23,6 +24,7 @@ export default async function ContentLayout({
 }) {
   const session = await getServerSession(authOptions);
 
+  // Redirect to the login page if the user is not authenticated
   if (!session) {
     redirect('/auth/login');
   }

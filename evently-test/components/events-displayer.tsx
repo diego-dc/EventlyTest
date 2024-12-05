@@ -4,6 +4,7 @@ import { EventCard } from '@/components/ui/event-card';
 import { useState, useEffect } from 'react';
 import { Input } from './ui/input';
 
+// Define the type for the event data
 type EventData = {
   id: string;
   title: string;
@@ -14,20 +15,21 @@ type EventData = {
 };
 
 export function EventsDisplayer() {
-  const [events, setEvents] = useState<EventData[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [events, setEvents] = useState<EventData[]>([]); // State to hold the list of events
+  const [searchTerm, setSearchTerm] = useState(''); // State to hold the search term
 
+  // Fetch events from the API on component mount
   useEffect(() => {
     async function fetchEvents() {
-      const response = await fetch('/api/events');
-      const data = await response.json();
-      setEvents(data);
+      const response = await fetch('/api/events'); // API endpoint to fetch events
+      const data = await response.json(); // Parse the response data
+      setEvents(data); // Update the state with fetched events
     }
 
-    fetchEvents();
+    fetchEvents(); // Call the fetch function
   }, []);
 
-  // Filtramos los eventos en base al término de búsqueda
+  // Filter events based on the search term
   const filteredEvents = events.filter((event) =>
     event.title.toLowerCase().includes(searchTerm.toLowerCase()),
   );

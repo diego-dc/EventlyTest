@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/table';
 import { useEffect, useState } from 'react';
 
+// Define the data structure for the transaction
 interface TransactionData {
   id: number;
   firstName: string;
@@ -21,6 +22,7 @@ interface TransactionData {
   amount: number;
 }
 
+// Define the data structure for the event
 interface eventData {
   id: string;
   title: string;
@@ -31,18 +33,21 @@ interface eventData {
 }
 
 export function TransactionsTable() {
-  const [transactions, setTransactions] = useState<TransactionData[]>([]);
+  const [transactions, setTransactions] = useState<TransactionData[]>([]); // Initialize the state for transactions
 
+  // Fetch the transactions from the API
   useEffect(() => {
     async function fetchTransactions() {
-      const response = await fetch('/api/transactions');
-      const data = await response.json();
-      setTransactions(data);
+      const response = await fetch('/api/transactions'); // Fetch the transactions from the API
+      const data = await response.json(); // Parse the JSON response
+      setTransactions(data); // Update the state with the transactions
     }
 
+    // Call the fetchTransactions function
     fetchTransactions();
   }, []);
 
+  // Calculate the total amount of all transactions
   const totalAmount = transactions.reduce(
     (sum, transaction) => sum + transaction.amount,
     0,

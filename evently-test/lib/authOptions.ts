@@ -6,8 +6,10 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import GoogleProvider from 'next-auth/providers/google';
 
+// Initialize Prisma client
 const prisma = new PrismaClient();
 
+// Define the auth options
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
@@ -23,20 +25,22 @@ export const authOptions: NextAuthOptions = {
         email: { label: 'Email', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
+      // Define the authorize function
       async authorize(credentials, req) {
         const { email, password } = credentials ?? {};
         if (!email || !password) throw new Error('Missing credentials');
 
-        // Busca el usuario en la base de datos
+        // Find the user by email
         const user = await prisma.user.findUnique({ where: { email } });
 
+        // If the user is not found, throw an error
         if (!user) throw new Error('User not found');
 
-        // Compara la contraseña
+        // Compare the password with the hashed password
         const isValidPassword = await bcrypt.compare(password, user.password);
         if (!isValidPassword) throw new Error('Invalid credentials');
 
-        console.log(credentials);
+        // Return the user object
         return {
           id: user.id.toString(),
           username: user.username,
@@ -47,6 +51,6 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: '/auth/login', // Página de login personalizada
+    signIn: '/auth/login', // URL login
   },
 };

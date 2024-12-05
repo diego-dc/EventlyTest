@@ -2,21 +2,7 @@
 
 import * as React from 'react';
 import { GalleryVerticalEnd } from 'lucide-react';
-import {
-  AudioWaveform,
-  Blocks,
-  Calendar,
-  Command,
-  Home,
-  Inbox,
-  MessageCircleQuestion,
-  Search,
-  Settings2,
-  Sparkles,
-  Trash2,
-  CalendarPlus2,
-  WalletCards,
-} from 'lucide-react';
+import { Search, CalendarPlus2, WalletCards } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
 import {
@@ -36,8 +22,6 @@ export function SidebarLeft({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = useSession();
-
-  console.log(session);
 
   // This is sample data.
   const data2 = {
@@ -62,10 +46,10 @@ export function SidebarLeft({
     ],
     user: session
       ? {
-          name: session?.user?.name ? session.user.name : 'John Doe',
+          name: session?.user?.name ? session.user.name : 'User Name',
           email: session?.user?.email ? session.user.email : '',
         }
-      : { name: 'John Doe', email: '' },
+      : { name: 'User Name', email: '' },
   };
   return (
     <>
@@ -89,7 +73,6 @@ export function SidebarLeft({
           <NavMain items={data2.navMain} />
           <SidebarSeparator className="mx-0" />
           <NavMain items={data2.navAdmin} />
-          {/* ACA LOS LINKS PARA ADMIN */}
         </SidebarHeader>
         <SidebarContent></SidebarContent>
         <SidebarFooter>
