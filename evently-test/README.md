@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Event Booking System
 
-## Getting Started
+An event booking system built with Next.js, TypeScript, and PostgresSQL. This project allows users to sign up, log in, and book tickets for events. Admins can create, update, and manage events, while users can view events and make transactions.
 
-First, run the development server:
+## Table of Contents
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Description](#description)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Description
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The Event Booking System is a simple web application designed to imitate the process of discovering and booking events. The platform allows event organizers to create and manage events, while users can browse and register for tickets. The system integrates with PostgresSQL for authentication and data storage.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Technologies Used:
 
-## Learn More
+- **Next.js** for the frontend and server-side rendering
+- **Tailwind CSS** for styling
+- **NextAuth.js** for managing user sessions
+- **shadcn/ui** for the ui components
 
-To learn more about Next.js, take a look at the following resources:
+## Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- User registration and login using email and password
+- Event creation
+- User event registration (purchase tickets)
+- Dynamic forms with validation
+- Responsive design using Tailwind CSS
+- Toast notifications for success/error feedback
+- Email-based authentication
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Installation
 
-## Deploy on Vercel
+Follow these steps to install and set up your project locally:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Prerequisites
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Node.js (version 14 or higher)
+
+### Steps
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/diego-dc/EventlyTest.git
+   ```
+2. Navigate into the project directory:
+   ```bash
+   cd evently-test
+   ```
+3. Install dependencies:
+   ```bash
+   npm install   # or yarn install
+   ```
+4. Set up environment variables:
+
+   - Rename `.env.example` to `.env.local` and configure the following values:
+     ```
+     NEXT_PUBLIC_BASE_URL=http://localhost:3000
+     NEXTAUTH_SECRET=your-next-auth-secret
+     DATABASE_URL="file:./dev.db"
+     NEXTAUTH_URL="http://localhost:3000"
+     ```
+
+5. Run the development server:
+   ```bash
+   npm run dev   # or yarn dev
+   ```
+6. Open your browser and go to `http://localhost:3000` to view the application.
+
+## Usage
+
+1. To start using the system, visit the login page (`/auth/login`).
+2. Sign up or log in using your email and password.
+3. Browse the available events on the main page (`/events`).
+4. Select an event and register for it by entering your details and purchasing tickets.
+5. Admins can manage events from the admin dashboard.
