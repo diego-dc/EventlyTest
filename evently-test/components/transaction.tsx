@@ -107,6 +107,14 @@ export function TransactionComponent({
         });
 
         router.push(`/events`);
+      }
+      if (response.status === 400 || data.error) {
+        // If the response is not successful, show a error toast
+        toast({
+          className: 'bg-red-500 text-white',
+          title: 'Error',
+          description: data.message,
+        });
       } else {
         // If there is an error, show an error toast
         toast({

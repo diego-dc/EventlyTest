@@ -68,7 +68,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           erorr: 'Error',
-          message: 'Not enough capacity available.',
+          message: "Event's Max. Capacity Reached. Cannot add more tickets.",
         },
         { status: 400 },
       );
