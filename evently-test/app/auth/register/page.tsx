@@ -1,16 +1,15 @@
-'use client';
-
 import React from 'react';
 
 import { SignupForm } from '@/components/signup-form';
-import NextAuth, { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
+import { authOptions } from '@/lib/authOptions';
 
-const Page = async () => {
+export default async function Page() {
   const session = await getServerSession(authOptions);
 
   if (session) {
-    redirect('/content');
+    redirect('/dashboard');
   }
 
   return (
@@ -18,4 +17,4 @@ const Page = async () => {
       <SignupForm />
     </div>
   );
-};
+}

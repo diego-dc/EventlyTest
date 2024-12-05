@@ -1,19 +1,19 @@
-import { SidebarLeft } from "@/components/sidebar-left";
-import { SidebarRight } from "@/components/sidebar-right";
+import { SidebarLeft } from '@/components/sidebar-left';
+import { SidebarRight } from '@/components/sidebar-right';
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar';
 
-export function Page() {
+export default async function Page() {
   return (
     <SidebarProvider>
       <SidebarLeft />
@@ -26,7 +26,7 @@ export function Page() {
               <BreadcrumbList>
                 <BreadcrumbItem>
                   <BreadcrumbPage className="line-clamp-1">
-                    Project Management & Task Tracking
+                    Ticket Sale
                   </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>

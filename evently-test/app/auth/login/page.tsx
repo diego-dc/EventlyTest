@@ -1,10 +1,17 @@
-"use client";
+import React from 'react';
 
-import React from "react";
+import { LoginForm } from '@/components/login-form';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/authOptions';
+import { redirect } from 'next/navigation';
 
-import { LoginForm } from "@/components/login-form";
+export default async function Page() {
+  const session = await getServerSession(authOptions);
 
-export default function Page() {
+  if (session) {
+    redirect('/dashboard');
+  }
+
   return (
     <div className="flex h-screen w-full items-center justify-center px-4">
       <LoginForm />
