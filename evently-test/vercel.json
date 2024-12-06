@@ -11,5 +11,7 @@
         "src": "/(.*)",
         "dest": "/auth/login"
       }
-    ]
+    ],
+  "framework": "nextjs",
+  "installCommand": "npm install"
 }
